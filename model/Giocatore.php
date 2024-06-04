@@ -67,12 +67,12 @@ class Giocatore
     // ===========================================================================================
 
     /**
-     * Get the Giocatore with specified Num and Password
-     * @param int $Num Giocatore's Num
+     * Get the Giocatore with specified Name and Password
+     * @param string $Name Giocatore's Name
      * @param string $Password Giocatore's Password
      * @return Giocatore Giocatore or null
      */
-    public static function authenticateUser(int $Name, string $Password): Giocatore|null
+    public static function authenticateUser(string $Name, string $Password): Giocatore|null
     {
         $queryText = 'SELECT * FROM `Giocatore` WHERE `Name_Giocatore` = ?';
         $query = new Query($queryText, 'i', $Name);
