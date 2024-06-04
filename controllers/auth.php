@@ -7,10 +7,10 @@ use Firebase\JWT\JWT;
 // Endpoint per il login e la creazione del token
 $app->post('/login', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
-    $num = $data['num'];
+    $name = $data['name'];
     $password = $data['password'];
 
-    $giocatore = Giocatore::authenticateUser($num, $password);
+    $giocatore = Giocatore::authenticateUser($name, $password);
 
     if ($giocatore !== null) {
         // Se l'autenticazione ha successo, crea il token JWT
