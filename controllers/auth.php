@@ -15,7 +15,7 @@ $app->post('/login', function (Request $request, Response $response) {
     if ($giocatore !== null) {
         // Se l'autenticazione ha successo, crea il token JWT
         $issuedAt = time();
-        $expirationTime = $issuedAt + 3600 * 24 * 10; // Token valido per 10 giorni
+        $expirationTime = $issuedAt + 3600 * 24 * 100; // Token valido per 100 giorni
 
         $payload = [
             'Id_Giocatore' => $giocatore->getId(),
