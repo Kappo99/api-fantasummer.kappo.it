@@ -75,7 +75,7 @@ class Giocatore
     public static function authenticateUser(string $Name, string $Password): Giocatore|null
     {
         $queryText = 'SELECT * FROM `Giocatore` WHERE `Name_Giocatore` = ?';
-        $query = new Query($queryText, 'i', $Name);
+        $query = new Query($queryText, 's', $Name);
         $result = DataBase::executeQuery($query, false);
 
         if ($result) {
