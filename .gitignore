@@ -1,0 +1,7 @@
+node_modules/
+package-lock.json
+composer.lock
+*.DS_Store
+log.txt
+token.txt
+exceptionLog.txt
