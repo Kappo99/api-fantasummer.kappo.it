@@ -11,7 +11,8 @@
     // }
     /* else */ if (ONLINE_CONNECTION)
     {
-        define("DB_HOST", "localhost");
+        // define("DB_HOST", "localhost");
+        define("DB_HOST", "kappo.it");
         define("DB_USERNAME", "u253831929_Summer");
         define("DB_PASSWORD", "dAE#B2D*v");
         define("DB_NAME", "u253831929_FantaSummer");
