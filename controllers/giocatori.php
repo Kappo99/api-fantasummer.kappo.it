@@ -3,18 +3,18 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Crea un'applicazione per gli utenti
-$app->group('/summertori', function ($group) {
+$app->group('/giocatori', function ($group) {
 
-    // GET /summertori
+    // GET /giocatori
     $group->get('', function (Request $request, Response $response) {
 
-        $httpResponse = new HttpResponse(Status::NotImplemented, "GET all summertori");
+        $httpResponse = new HttpResponse(Status::NotImplemented, "GET all giocatori");
         $response->getBody()->write($httpResponse->send());
         $response = $response->withStatus($httpResponse->getStatusCode());
         return $response;
     });
 
-    // GET /summertori/{id}
+    // GET /giocatori/{id}
     $group->get('/{id}', function (Request $request, Response $response, $args) {
         $articleId = $args['id'];
         $giocatore = Giocatore::getGiocatoreById($articleId);

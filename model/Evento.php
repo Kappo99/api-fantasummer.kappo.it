@@ -171,7 +171,7 @@ class Evento
     /**
      * Get the Evento's Count with specified Id
      * @param int $Id Evento's Id
-     * @return int Count of Summertori played this Evento
+     * @return int Count of Giocatori played this Evento
      */
     public static function getEventiCountById(int $Id): mixed
     {
