@@ -48,6 +48,29 @@ $app->group('/giocatori', function ($group) {
         return $response;
     });
 
+    // GET /giocatori/eventi
+    $group->get('/eventi', function (Request $request, Response $response) {
+        $result = Evento::getEventiByGiocatori();
+
+        $giocatori = array();
+        foreach ($result as $r) {
+            if (!isset ($giocatori[$r['giocatore']->getId()]))
+                $giocatori[$r['giocatore']->getId()] = array ('giocatore' => $r['giocatore']->toArray());
+            if (!isset ($giocatori[$r['giocatore']->getId()]['eventi']))
+                $giocatori[$r['giocatore']->getId()]['eventi'] = array ();
+            $giocatori[$r['giocatore']->getId()]['eventi'][] = $r['evento']->toArray();
+        }
+
+        if ($giocatori)
+            $httpResponse = new HttpResponse(Status::Ok, "GET eventi of giocatori", $giocatori);
+        else
+            $httpResponse = new HttpResponse(Status::NotFound, "Not Found eventi of giocatori");
+
+        $response->getBody()->write($httpResponse->send());
+        $response = $response->withStatus($httpResponse->getStatusCode());
+        return $response;
+    });
+
     // PUR /giocatori/{idGiocatore}/eventi/{idEvento}
     $group->put('/{idGiocatore:[0-9]+}/eventi/{idEvento:[0-9]+}', function (Request $request, Response $response, $args) {
         $idGiocatore = $args['idGiocatore'];

@@ -144,6 +144,40 @@ class Evento
     }
 
     /**
+     * Get the Evento's List of Giocatore
+     * @return Evento Evento[] or null
+     */
+    public static function getEventiByGiocatori(): array
+    {
+        $queryText = "SELECT *
+                    FROM `Evento` E
+                        INNER JOIN `Formazione` F ON E.`Id_Evento` = F.`Id_Evento_Formazione`
+                        INNER JOIN `Giocatore` G ON G.`Id_Giocatore` = F.`Id_Giocatore_Formazione`
+                    ORDER BY G.`Name_Giocatore`, E.`Num_Evento`";
+        $query = new Query($queryText);
+        $result = DataBase::executeQuery($query);
+
+        $eventi = array();
+        $i = 0;
+        foreach ($result as $r) {
+            $eventi[$i] = array();
+
+            $eventi[$i]['giocatore'] = new Giocatore($r['Id_Giocatore']);
+            $eventi[$i]['giocatore']->setName($r['Name_Giocatore']);
+
+            $eventi[$i]['evento'] = new Evento($r['Id_Evento']);
+            $eventi[$i]['evento']->setNum($r['Num_Evento']);
+            $eventi[$i]['evento']->setTitle($r['Title_Evento']);
+            $eventi[$i]['evento']->setDescription($r['Description_Evento']);
+            $eventi[$i]['evento']->setMonteSummer($r['MonteSummer_Evento']);
+            $eventi[$i]['evento']->setIsCompletato($r['Id_Giocatore_Formazione'] != null);
+            $i++;
+        }
+
+        return $eventi;
+    }
+
+    /**
      * Update the Evento with specified Id of specified Giocatore
      * @param int $IdEvento Evento's Id
      * @param int $IdGiocatore Giocatore's Id
