@@ -7,6 +7,7 @@ class Evento
     private $Title;
     private $Description;
     private $MonteSummer;
+    private $Completato;
 
     public function __construct(?int $Id = null)
     {
@@ -64,6 +65,15 @@ class Evento
         return $this->MonteSummer;
     }
 
+    public function setCompletato(bool $Completato)
+    {
+        $this->Completato = $Completato;
+    }
+    public function getCompletato(): bool
+    {
+        return $this->Completato;
+    }
+
     public function toArray(): array
     {
         return [
@@ -72,6 +82,7 @@ class Evento
             'Title' => $this->Title,
             'Description' => $this->Description,
             'MonteSummer' => $this->MonteSummer,
+            'Completato' => $this->Completato,
         ];
     }
 
@@ -95,6 +106,37 @@ class Evento
             $eventi[$i]->setTitle($r['Title_Evento']);
             $eventi[$i]->setDescription($r['Description_Evento']);
             $eventi[$i]->setMonteSummer($r['MonteSummer_Evento']);
+            $eventi[$i]->setCompletato(false);
+            $i++;
+        }
+
+        return $eventi;
+    }
+
+    /**
+     * Get the Evento's List of Giocatore
+     * @param int $IdGiocatore Giocatore Id
+     * @return Evento Evento[] or null
+     */
+    public static function getEventiByIdGiocatore(int $IdGiocatore): array
+    {
+        $queryText = 'SELECT *
+                    FROM `Evento` 
+                        LEFT JOIN (SELECT * FROM `Formazione` WHERE `Id_Giocatore_Formazione` = ?) F 
+                            ON `Evento`.`Id_Evento` = F.`Id_Evento_Formazione`
+        ';
+        $query = new Query($queryText, 'i', $IdGiocatore);
+        $result = DataBase::executeQuery($query);
+
+        $eventi = array();
+        $i = 0;
+        foreach ($result as $r) {
+            $eventi[$i] = new Evento($r['Id_Evento']);
+            $eventi[$i]->setNum($r['Num_Evento']);
+            $eventi[$i]->setTitle($r['Title_Evento']);
+            $eventi[$i]->setDescription($r['Description_Evento']);
+            $eventi[$i]->setMonteSummer($r['MonteSummer_Evento']);
+            $eventi[$i]->setCompletato($r['Id_Giocatore_Formazione'] != null);
             $i++;
         }
 
