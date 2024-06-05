@@ -109,4 +109,4 @@ $app->group('/giocatori', function ($group) {
         return $response;
     });
 
-})->add(new AuthenticationMiddleware()) ; //* Aggiungi il Middleware di autenticazione a tutto il gruppo
+})/* ->add(new AuthenticationMiddleware()) */ ; //* Aggiungi il Middleware di autenticazione a tutto il gruppo
