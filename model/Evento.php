@@ -94,7 +94,7 @@ class Evento
      */
     public static function getEventi(): array
     {
-        $queryText = 'SELECT * FROM `Evento`';
+        $queryText = 'SELECT * FROM `Evento` ORDER BY `Num_Evento`';
         $query = new Query($queryText);
         $result = DataBase::executeQuery($query);
 
@@ -123,7 +123,8 @@ class Evento
         $queryText = "SELECT *
                     FROM `Evento` 
                         LEFT JOIN (SELECT * FROM `Formazione` WHERE `Id_Giocatore_Formazione` = ?) F 
-                            ON `Evento`.`Id_Evento` = F.`Id_Evento_Formazione`";
+                            ON `Evento`.`Id_Evento` = F.`Id_Evento_Formazione`
+                    ORDER BY `Num_Evento`";
         $query = new Query($queryText, 'i', $IdGiocatore);
         $result = DataBase::executeQuery($query);
 
