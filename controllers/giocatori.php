@@ -77,7 +77,7 @@ $app->group('/giocatori', function ($group) {
         }
 
         if ($classifica)
-            $httpResponse = new HttpResponse(Status::Ok, "GET classifica", array('classifica' => $classifica));
+            $httpResponse = new HttpResponse(Status::Ok, "GET classifica", array('giocatori' => $classifica));
         else
             $httpResponse = new HttpResponse(Status::NotFound, "Cannot calculate classifica");
 
