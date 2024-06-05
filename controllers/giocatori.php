@@ -71,7 +71,7 @@ $app->group('/giocatori', function ($group) {
         return $response;
     });
 
-    // PUR /giocatori/{idGiocatore}/eventi/{idEvento}
+    // PUT /giocatori/{idGiocatore}/eventi/{idEvento}
     $group->put('/{idGiocatore:[0-9]+}/eventi/{idEvento:[0-9]+}', function (Request $request, Response $response, $args) {
         $idGiocatore = $args['idGiocatore'];
         $idEvento = $args['idEvento'];
