@@ -7,7 +7,7 @@ class Evento
     private $Title;
     private $Description;
     private $MonteSummer;
-    private $Completato;
+    private $IsCompletato;
 
     public function __construct(?int $Id = null)
     {
@@ -65,13 +65,13 @@ class Evento
         return $this->MonteSummer;
     }
 
-    public function setCompletato(bool $Completato)
+    public function setIsCompletato(bool $IsCompletato)
     {
-        $this->Completato = $Completato;
+        $this->IsCompletato = $IsCompletato;
     }
-    public function getCompletato(): bool
+    public function getIsCompletato(): bool
     {
-        return $this->Completato;
+        return $this->IsCompletato;
     }
 
     public function toArray(): array
@@ -82,7 +82,7 @@ class Evento
             'Title' => $this->Title,
             'Description' => $this->Description,
             'MonteSummer' => $this->MonteSummer,
-            'Completato' => $this->Completato,
+            'IsCompletato' => $this->IsCompletato,
         ];
     }
 
@@ -106,7 +106,7 @@ class Evento
             $eventi[$i]->setTitle($r['Title_Evento']);
             $eventi[$i]->setDescription($r['Description_Evento']);
             $eventi[$i]->setMonteSummer($r['MonteSummer_Evento']);
-            $eventi[$i]->setCompletato(false);
+            $eventi[$i]->setIsCompletato(false);
             $i++;
         }
 
@@ -136,7 +136,7 @@ class Evento
             $eventi[$i]->setTitle($r['Title_Evento']);
             $eventi[$i]->setDescription($r['Description_Evento']);
             $eventi[$i]->setMonteSummer($r['MonteSummer_Evento']);
-            $eventi[$i]->setCompletato($r['Id_Giocatore_Formazione'] != null);
+            $eventi[$i]->setIsCompletato($r['Id_Giocatore_Formazione'] != null);
             $i++;
         }
 
