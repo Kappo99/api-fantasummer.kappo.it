@@ -6,6 +6,7 @@ class Giocatore
     private $Name;
     private $Password;
     private $Role;
+    private $MonteSummer;
 
     public function __construct(?int $Id = null)
     {
@@ -54,6 +55,15 @@ class Giocatore
         return $this->Role;
     }
 
+    public function setMonteSummer(int $MonteSummer)
+    {
+        $this->MonteSummer = $MonteSummer;
+    }
+    public function getMonteSummer(): int
+    {
+        return $this->MonteSummer;
+    }
+
     public function toArray(): array
     {
         return [
@@ -61,6 +71,7 @@ class Giocatore
             'Name' => $this->Name,
             'Password' => $this->Password,
             'Role' => $this->Role,
+            'MonteSummer' => $this->MonteSummer,
         ];
     }
 
@@ -111,5 +122,41 @@ class Giocatore
             $Giocatore = null;
 
         return $Giocatore;
+    }
+
+    /**
+     * Get the Giocatore List for the Classifica
+     * @return Giocatore[] Giocatore's List ordered by score
+     */
+    public static function getClassifica(): array
+    {
+        $queryText = "SELECT 
+                        G.Id_Giocatore,
+                        G.Name_Giocatore,
+                        COALESCE(SUM(E.MonteSummer_Evento), 0) AS Total_Punteggio
+                    FROM 
+                        Giocatore G
+                    LEFT JOIN 
+                        Formazione F ON G.Id_Giocatore = F.Id_Giocatore_Formazione
+                    LEFT JOIN 
+                        Evento E ON F.Id_Evento_Formazione = E.Id_Evento
+                    GROUP BY 
+                        G.Id_Giocatore, G.Name_Giocatore
+                    ORDER BY 
+                        Total_Punteggio DESC
+        ";
+        $query = new Query($queryText);
+        $result = DataBase::executeQuery($query, false);
+
+        $classifica = array();
+        $i = 0;
+        foreach ($result as $r) {
+            $classifica[$i] = new Giocatore($r['Id_Giocatore']);
+            $classifica[$i]->setName($r['Name_Giocatore']);
+            $classifica[$i]->setMonteSummer($r['Total_Punteggio']);
+            $i++;
+        }
+
+        return $classifica;
     }
 }

@@ -15,7 +15,7 @@ $app->group('/giocatori', function ($group) {
     });
 
     // GET /giocatori/{id}
-    $group->get('/{id}', function (Request $request, Response $response, $args) {
+    $group->get('/{id:[0-9]+}', function (Request $request, Response $response, $args) {
         $giocatoreId = $args['id'];
         $giocatore = Giocatore::getGiocatoreById($giocatoreId);
 
@@ -30,7 +30,7 @@ $app->group('/giocatori', function ($group) {
     });
 
     // GET /giocatori/{id}/eventi
-    $group->get('/{id}/eventi', function (Request $request, Response $response, $args) {
+    $group->get('/{id:[0-9]+}/eventi', function (Request $request, Response $response, $args) {
         $giocatoreId = $args['id'];
         $eventi = Evento::getEventiByIdGiocatore($giocatoreId);
 
@@ -49,7 +49,7 @@ $app->group('/giocatori', function ($group) {
     });
 
     // PUR /giocatori/{idGiocatore}/eventi/{idEvento}
-    $group->put('/{idGiocatore}/eventi/{idEvento}', function (Request $request, Response $response, $args) {
+    $group->put('/{idGiocatore:[0-9]+}/eventi/{idEvento:[0-9]+}', function (Request $request, Response $response, $args) {
         $idGiocatore = $args['idGiocatore'];
         $idEvento = $args['idEvento'];
         $updated = Evento::updateIsCompletatoByGiocatore($idEvento, $idGiocatore);
@@ -67,5 +67,23 @@ $app->group('/giocatori', function ($group) {
         $response = $response->withStatus($httpResponse->getStatusCode());
         return $response;
     })->add(new AuthenticationMiddleware());
+
+    // GET /giocatori/classifica
+    $group->get('/classifica', function (Request $request, Response $response) {
+        $classifica = Giocatore::getClassifica();
+
+        for ($i = 0; $i < count($classifica); $i++) {
+            $classifica[$i] = $classifica[$i]->toArray();
+        }
+
+        if ($classifica)
+            $httpResponse = new HttpResponse(Status::Ok, "GET classifica", array('classifica' => $classifica));
+        else
+            $httpResponse = new HttpResponse(Status::NotFound, "Cannot calculate classifica");
+
+        $response->getBody()->write($httpResponse->send());
+        $response = $response->withStatus($httpResponse->getStatusCode());
+        return $response;
+    });
 
 })->add(new AuthenticationMiddleware()) ; //* Aggiungi il Middleware di autenticazione a tutto il gruppo
