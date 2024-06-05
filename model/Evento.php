@@ -120,11 +120,10 @@ class Evento
      */
     public static function getEventiByIdGiocatore(int $IdGiocatore): array
     {
-        $queryText = 'SELECT *
+        $queryText = "SELECT *
                     FROM `Evento` 
                         LEFT JOIN (SELECT * FROM `Formazione` WHERE `Id_Giocatore_Formazione` = ?) F 
-                            ON `Evento`.`Id_Evento` = F.`Id_Evento_Formazione`
-        ';
+                            ON `Evento`.`Id_Evento` = F.`Id_Evento_Formazione`";
         $query = new Query($queryText, 'i', $IdGiocatore);
         $result = DataBase::executeQuery($query);
 
@@ -141,5 +140,35 @@ class Evento
         }
 
         return $eventi;
+    }
+
+    /**
+     * Update the Evento with specified Id of specified Giocatore
+     * @param int $IdEvento Evento's Id
+     * @param int $IdGiocatore Giocatore's Id
+     * @return int number of updated rows
+     */
+    public static function updateIsCompletatoByGiocatore(int $IdEvento, int $IdGiocatore): int
+    {
+        $queryText = "SELECT COUNT(*) AS recordCount
+                FROM `Formazione`
+                WHERE `Id_Giocatore_Formazione` = ?
+                    AND `Id_Evento_Formazione` = ?";
+        $query = new Query($queryText, 'ii', $IdGiocatore, $IdEvento);
+        $result = DataBase::executeQuery($query)[0];
+
+        $recordCount = $result['recordCount'];
+
+        if ($recordCount > 0) {
+            $queryText = "DELETE FROM `Formazione`
+                        WHERE `Id_Giocatore_Formazione` = ?
+                        AND `Id_Evento_Formazione` = ?";
+        } else {
+            $queryText = "INSERT INTO `Formazione` (`Id_Giocatore_Formazione`, `Id_Evento_Formazione`) VALUES (?, ?)";
+        }
+        $query = new Query($queryText, 'ii', $IdGiocatore, $IdEvento);
+        $result = DataBase::executeQuery($query);
+
+        return $result;
     }
 }

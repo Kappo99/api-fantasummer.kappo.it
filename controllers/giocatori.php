@@ -29,7 +29,7 @@ $app->group('/giocatori', function ($group) {
         return $response;
     });
 
-    // GET /giocatori/{id}
+    // GET /giocatori/{id}/eventi
     $group->get('/{id}/eventi', function (Request $request, Response $response, $args) {
         $giocatoreId = $args['id'];
         $eventi = Evento::getEventiByIdGiocatore($giocatoreId);
@@ -47,5 +47,25 @@ $app->group('/giocatori', function ($group) {
         $response = $response->withStatus($httpResponse->getStatusCode());
         return $response;
     });
+
+    // PUR /giocatori/{idGiocatore}/eventi/{idEvento}
+    $group->put('/{idGiocatore}/eventi/{idEvento}', function (Request $request, Response $response, $args) {
+        $idGiocatore = $args['idGiocatore'];
+        $idEvento = $args['idEvento'];
+        $updated = Evento::updateIsCompletatoByGiocatore($idEvento, $idGiocatore);
+
+        // if ($updated > 0)
+            $httpResponse = new HttpResponse(
+                Status::Ok,
+                "UPDATE Evento $idEvento",
+                $updated
+            );
+        // else
+        //     $httpResponse = new HttpResponse(Status::InternalServerError, "Not UPDATE Evento $idEvento");
+
+        $response->getBody()->write($httpResponse->send());
+        $response = $response->withStatus($httpResponse->getStatusCode());
+        return $response;
+    })->add(new AuthenticationMiddleware());
 
 })->add(new AuthenticationMiddleware()) ; //* Aggiungi il Middleware di autenticazione a tutto il gruppo
